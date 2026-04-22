@@ -1,9 +1,9 @@
-# Claude Gripe — Forum + Uptime + Skills Hub
+# Claude Oops — Forum + Uptime + Skills Hub
 
 **Status:** Draft — awaiting review
 **Date:** 2026-04-22
 **Author:** Tanmay Kallakuri
-**Working name:** `claude-gripe` (rename before launch)
+**Name:** `claude-oops`
 
 ## Purpose
 
@@ -372,7 +372,7 @@ Deliverables in `/docs/frontend-contract/`:
 ## Folder layout
 
 ```
-claude-gripe/
+claude-oops/
 ├─ app/
 │  ├─ (public)/                 # layouts and pages
 │  ├─ api/                      # route handlers
@@ -396,12 +396,12 @@ claude-gripe/
    └─ e2e/
 ```
 
-## Open questions (resolve before plan)
+## Resolved setup decisions
 
-- **Project name** — confirm or replace `claude-gripe` before we harden it in domain, package.json, GitHub repo.
-- **Domain** — does one exist yet? (Needed for OAuth callback URLs and email verification links.)
-- **GitHub repo** — public or private at v1? (Affects OAuth app setup and whether issues are user-reportable there too.)
-- **Email provider** — Supabase Auth's built-in sender is fine for v1, but the auto-incident-thread notification volume may need Resend/Postmark earlier than expected.
+- **Name:** `claude-oops`.
+- **GitHub repo:** public.
+- **Domain:** none yet. OAuth callback + Supabase email verification links use the Vercel preview URL (e.g. `claude-oops.vercel.app`) for v1. Plan must make the base URL a single env var (`APP_BASE_URL`) so the later domain swap is a config change, not a code change.
+- **Email:** Supabase Auth's built-in sender for v1. Flag to revisit if auto-incident-thread traffic or bounce rates push us past Supabase's limits.
 
 ## Review checkpoints
 
