@@ -1864,7 +1864,7 @@ jobs:
         run: supabase start --workdir .
       - name: Integration tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54001
         run: |
           # extract keys from supabase status
           status=$(supabase status -o json)
@@ -1924,7 +1924,7 @@ git commit -m "ci: GitHub Actions workflow with typecheck, lint, unit, integrati
 
 5. Create a GitHub OAuth app at https://github.com/settings/developers:
    - Homepage URL: `http://localhost:3000`
-   - Authorization callback URL: `http://localhost:54321/auth/v1/callback`
+   - Authorization callback URL: `http://localhost:54001/auth/v1/callback` (matches the API port in `supabase/config.toml`)
    Put the client ID / secret in `.env`.
 
 6. Run the app:
