@@ -14,7 +14,10 @@ export async function GET(
       .select("id, username, display_name, avatar_url, bio, role, created_at")
       .eq("username", username.toLowerCase())
       .maybeSingle();
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("Supabase error:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+      throw new Error(error.message);
+    }
     if (!data) throw new ApiError("not_found", "No such profile", 404);
     if (data.role === "banned") {
       throw new ApiError("not_found", "No such profile", 404);
