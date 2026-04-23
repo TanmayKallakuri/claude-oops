@@ -30,3 +30,16 @@ export async function requireRole(
   }
   return userId;
 }
+
+export async function assertNotBanned(admin: SupabaseClient, userId: string): Promise<void> {
+  const { data, error } = await admin
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) throw new ApiError("internal", "Role lookup failed", 500);
+  if (!data) throw new ApiError("unauthorized", "Profile missing", 401);
+  if ((data.role as Role) === "banned") {
+    throw new ApiError("forbidden", "Banned users cannot perform this action", 403);
+  }
+}
