@@ -3,8 +3,9 @@
 import { createBrowserClient as createSSRBrowser } from "@supabase/ssr";
 
 export function createBrowserClient() {
-  return createSSRBrowser(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
+  if (!anon) throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
+  return createSSRBrowser(url, anon);
 }
