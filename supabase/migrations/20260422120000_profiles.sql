@@ -14,7 +14,8 @@ create table public.profiles (
   updated_at timestamptz not null default now()
 );
 
-create index profiles_username_idx on public.profiles (username);
+-- Note: `username citext unique` auto-generates a unique B-tree index,
+-- so we do not add a second index on the same column.
 
 -- Derive a unique lowercase username from metadata or email prefix.
 create or replace function public.handle_new_user()
@@ -28,9 +29,12 @@ declare
   candidate citext;
   suffix int := 0;
 begin
+  -- GitHub OAuth users may not expose an email, so guard NULL through
+  -- regexp_replace so the length-fallback branch always runs.
   base_username := coalesce(
     lower(new.raw_user_meta_data ->> 'username'),
-    lower(split_part(new.email, '@', 1))
+    lower(split_part(new.email, '@', 1)),
+    ''
   );
   base_username := regexp_replace(base_username, '[^a-z0-9_]', '', 'g');
   if length(base_username) < 3 then
