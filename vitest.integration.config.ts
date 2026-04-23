@@ -7,6 +7,7 @@ export default defineConfig({
     include: ["tests/integration/**/*.test.ts"],
     setupFiles: ["tests/setup/load-env.ts"],
     globalSetup: ["tests/setup/supabase-reset.ts"],
+    fileParallelism: false,
     testTimeout: 30_000,
     hookTimeout: 60_000,
   },
