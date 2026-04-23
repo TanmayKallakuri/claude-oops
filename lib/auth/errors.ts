@@ -17,6 +17,9 @@ export function toResponse(err: unknown): Response {
     );
   }
   console.error("Unexpected error:", err);
+  if (err && typeof err === "object" && "cause" in err) {
+    console.error("Error cause:", (err as { cause: unknown }).cause);
+  }
   return Response.json(
     { error: { code: "internal", message: "Internal server error" } },
     { status: 500 },
