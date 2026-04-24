@@ -8,17 +8,17 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANT_CLASSES: Record<Variant, string> = {
   primary:
-    "bg-oops-primary text-white hover:bg-orange-700 active:bg-orange-800 shadow-oops hover:shadow-oops-lift",
+    "bg-oops-primary text-oops-bg hover:bg-[#b55738] active:bg-[#a04830]",
   ghost:
     "bg-transparent text-oops-text border border-oops-border hover:bg-oops-primary-soft/40",
   danger:
-    "bg-oops-danger text-white hover:bg-red-800 active:bg-red-900 shadow-oops",
+    "bg-oops-danger text-oops-bg hover:bg-[#8c3422] active:bg-[#7a2d1e]",
 };
 
 const SIZE_CLASSES: Record<Size, string> = {
-  sm: "h-8 px-3 text-xs rounded-lg",
-  md: "h-10 px-4 text-sm rounded-xl",
-  lg: "h-12 px-6 text-base rounded-xl font-semibold",
+  sm: "h-8 px-3 text-xs rounded-md",
+  md: "h-10 px-4 text-sm rounded-md",
+  lg: "h-12 px-6 text-base rounded-md font-semibold",
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -6,7 +6,7 @@ export function LogoIcon({ size = 32, className }: { size?: number; className?: 
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center rounded-full bg-oops-primary text-white font-serif italic font-bold transition-transform hover:rotate-12 hover:scale-110",
+        "inline-flex items-center justify-center rounded-full bg-oops-primary text-oops-bg font-serif font-medium not-italic",
         className,
       )}
       style={{ width: size, height: size, fontSize: size * 0.55 }}

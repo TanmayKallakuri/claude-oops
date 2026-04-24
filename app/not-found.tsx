@@ -10,7 +10,7 @@ export default function NotFound() {
         <div className="inline-block -rotate-6 mb-6">
           <WordMark size="lg" />
         </div>
-        <h1 className="font-serif italic text-5xl md:text-6xl text-oops-text tracking-tight leading-none">
+        <h1 className="font-serif font-medium not-italic text-5xl md:text-6xl text-oops-text tracking-tight leading-none">
           this oops doesn&apos;t exist
         </h1>
         <p className="mt-4 text-oops-muted">

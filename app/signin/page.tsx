@@ -56,7 +56,7 @@ export default function SigninPage() {
             <WordMark size="md" />
           </div>
 
-          <h1 className="font-serif italic text-5xl md:text-6xl text-oops-text leading-tight">
+          <h1 className="font-serif font-medium not-italic text-5xl md:text-6xl text-oops-text leading-tight tracking-tight">
             welcome back<span className="text-oops-primary">.</span>
           </h1>
           <p className="text-oops-muted text-base mt-2">
@@ -121,7 +121,7 @@ export default function SigninPage() {
         <div className="relative z-10 flex flex-col justify-center px-12 min-h-screen">
           <WordMark size="lg" />
 
-          <p className="font-serif italic text-4xl mt-8 text-oops-text leading-snug">
+          <p className="font-serif font-medium not-italic text-4xl mt-8 text-oops-text leading-snug">
             the group chat for when the vibes go off
           </p>
 

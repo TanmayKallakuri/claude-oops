@@ -72,7 +72,7 @@ export default function SettingsPage() {
   return (
     <main className="max-w-xl mx-auto px-4 md:px-8 py-12">
       {/* Page heading */}
-      <h1 className="font-serif italic text-5xl text-oops-text leading-tight tracking-tight">
+      <h1 className="font-serif font-medium not-italic text-5xl text-oops-text leading-tight tracking-tight">
         your corner<span className="text-oops-primary">.</span>
       </h1>
       <p className="text-oops-muted text-base mt-2">how the rest of us see you.</p>

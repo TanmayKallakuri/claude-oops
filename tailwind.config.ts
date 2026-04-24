@@ -6,27 +6,23 @@ export default {
     extend: {
       colors: {
         oops: {
-          bg: "#fef7f0",
-          surface: "#ffffff",
-          primary: "#c2410c",
-          "primary-soft": "#fed7aa",
-          accent: "#fbbf24",
-          danger: "#b91c1c",
-          "danger-soft": "#fecaca",
-          text: "#1a0f08",
-          muted: "#9a5a3a",
-          border: "#f3e8d9",
+          bg: "#f4f3ee",
+          surface: "#eeede6",
+          primary: "#c96442",
+          "primary-soft": "#e89268",
+          accent: "#c98a42",
+          danger: "#a53e2a",
+          "danger-soft": "#e5c2b8",
+          text: "#191817",
+          muted: "#8a847a",
+          border: "#d8d3c8",
+          ink: "#191817",
         },
       },
       fontFamily: {
         sans: ['"Inter"', "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
-        serif: ['"Instrument Serif"', "ui-serif", "Georgia", "serif"],
+        serif: ['"Source Serif 4"', '"Iowan Old Style"', "Georgia", '"Times New Roman"', "serif"],
         mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-      },
-      boxShadow: {
-        oops: "0 1px 3px rgba(180,83,9,.08)",
-        "oops-lift": "0 8px 20px rgba(180,83,9,.12)",
-        "oops-ring": "0 0 0 3px rgba(194,65,12,.25)",
       },
       keyframes: {
         blob: {

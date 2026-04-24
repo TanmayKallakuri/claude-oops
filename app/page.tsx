@@ -56,7 +56,7 @@ export default function HomePage() {
       <section className="relative bg-oops-bg min-h-[200px] md:min-h-[280px] flex items-center overflow-hidden">
         <BlobBackground />
         <div className="relative z-10 w-full max-w-3xl mx-auto px-4 md:px-8 py-12 md:py-16">
-          <h1 className="font-serif italic text-5xl md:text-6xl text-oops-text tracking-tight leading-tight">
+          <h1 className="font-serif font-medium not-italic text-5xl md:text-6xl text-oops-text tracking-tight leading-tight">
             oh no, what did Claude do{" "}
             <span className="text-oops-primary">this time?</span>
           </h1>

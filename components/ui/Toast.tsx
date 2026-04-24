@@ -32,7 +32,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ y: -8, opacity: 0, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
               className={cn(
-                "pointer-events-auto min-w-[220px] max-w-[420px] rounded-xl px-4 py-3 text-sm shadow-oops-lift font-medium",
+                "pointer-events-auto min-w-[220px] max-w-[420px] rounded-lg px-4 py-3 text-sm font-medium border border-oops-border",
                 t.tone === "success" && "bg-oops-primary text-white",
                 t.tone === "error" && "bg-oops-danger text-white",
                 t.tone === "info" && "bg-oops-surface text-oops-text border border-oops-border",

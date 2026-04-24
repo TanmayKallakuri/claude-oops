@@ -193,7 +193,7 @@ export default function ThreadPage() {
         </div>
 
         {/* row 2: title */}
-        <h1 className="font-serif italic text-4xl md:text-5xl text-oops-text mt-3 tracking-tight leading-tight">
+        <h1 className="font-serif font-medium not-italic text-4xl md:text-5xl text-oops-text mt-3 tracking-tight leading-tight">
           {thread.title}
         </h1>
 
@@ -261,7 +261,7 @@ export default function ThreadPage() {
       </Card>
 
       {/* comments heading */}
-      <h2 className="font-serif italic text-2xl md:text-3xl text-oops-text mt-10 mb-4">
+      <h2 className="font-serif font-medium not-italic text-2xl md:text-3xl text-oops-text mt-10 mb-4">
         Comments ({thread.comment_count})
       </h2>
 

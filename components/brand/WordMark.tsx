@@ -12,7 +12,7 @@ export function WordMark({ size = "md", className }: { size?: Size; className?: 
   return (
     <span
       className={cn(
-        "font-serif italic text-oops-text tracking-tight leading-none select-none",
+        "font-serif font-medium not-italic text-oops-text tracking-tight leading-none select-none",
         SIZE_CLASSES[size],
         className,
       )}

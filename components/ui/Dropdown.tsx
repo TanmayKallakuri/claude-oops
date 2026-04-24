@@ -43,7 +43,7 @@ export function Dropdown({
             exit={{ opacity: 0, y: -4, scale: 0.97 }}
             transition={{ duration: 0.15 }}
             className={cn(
-              "absolute top-full mt-2 min-w-[180px] rounded-xl bg-oops-surface shadow-oops-lift border border-oops-border overflow-hidden z-40",
+              "absolute top-full mt-2 min-w-[180px] rounded-lg bg-oops-surface border border-oops-border overflow-hidden z-40",
               align === "right" ? "right-0" : "left-0",
             )}
             onClick={() => setOpen(false)}

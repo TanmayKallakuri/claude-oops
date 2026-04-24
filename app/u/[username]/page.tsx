@@ -63,7 +63,7 @@ export default function ProfilePage() {
   if (state.status === "notfound") {
     return (
       <main className="max-w-3xl mx-auto px-4 md:px-8 py-12 flex flex-col items-center justify-center text-center min-h-[40vh]">
-        <p className="font-serif italic text-4xl text-oops-text">
+        <p className="font-serif font-medium not-italic text-4xl text-oops-text">
           this person doesn&apos;t exist<span className="text-oops-primary">.</span>
         </p>
         <p className="text-oops-muted text-base mt-3">
@@ -94,7 +94,7 @@ export default function ProfilePage() {
 
           {/* Identity */}
           <div className="flex-1 min-w-0">
-            <h1 className="font-serif italic text-4xl md:text-5xl text-oops-text leading-tight tracking-tight">
+            <h1 className="font-serif font-medium not-italic text-4xl md:text-5xl text-oops-text leading-tight tracking-tight">
               {profile.display_name ?? `@${profile.username}`}
             </h1>
             {profile.display_name && (

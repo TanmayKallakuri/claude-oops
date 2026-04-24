@@ -54,7 +54,7 @@ export default function NewThreadPage() {
     <main className="min-h-screen bg-oops-bg px-4 pb-16 pt-12">
       {/* Header */}
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className="font-serif italic text-5xl text-oops-text md:text-6xl">
+        <h1 className="font-serif font-medium not-italic text-5xl text-oops-text md:text-6xl tracking-tight">
           spill it<span className="text-oops-primary">.</span>
         </h1>
         <p className="mt-3 text-base text-oops-muted">
@@ -74,7 +74,7 @@ export default function NewThreadPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="give it a headline"
-              className="w-full rounded-xl border-2 border-oops-border bg-transparent px-4 py-3 font-serif italic text-2xl text-oops-text placeholder:text-oops-muted/50 outline-none transition-colors duration-150 focus:border-oops-primary"
+              className="w-full rounded-lg border-2 border-oops-border bg-transparent px-4 py-3 font-serif font-medium not-italic text-2xl text-oops-text placeholder:text-oops-muted/50 outline-none transition-colors duration-150 focus:border-oops-primary"
             />
           </div>
 
