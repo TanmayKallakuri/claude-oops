@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
       scoreMap = new Map((scores ?? []).map((s) => [s.target_id as string, Number(s.score ?? 0)]));
     }
 
-    let countMap = new Map<string, number>();
+    const countMap = new Map<string, number>();
     if (ids.length > 0) {
       const { data: counts } = await admin
         .from("comments")
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    let shaped = (rows ?? []).map((r) => ({
+    const shaped = (rows ?? []).map((r) => ({
       id: r.id as string,
       title: r.title as string,
       category: r.category as string,
