@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BlobBackground } from "@/components/brand/BlobBackground";
 import { ActivityTicker } from "@/components/brand/ActivityTicker";
 import { StatusPill } from "@/components/brand/StatusPill";
+import { StatusSection } from "@/components/brand/StatusSection";
 import { ThreadCard, type ThreadSummary } from "@/components/forum/ThreadCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -82,6 +83,9 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+
+      {/* ── Section 2b: Live Anthropic status ── */}
+      <StatusSection />
 
       {/* ── Section 3: Three kinds of oops ── */}
       <section className="py-24 bg-oops-surface">
