@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BlobBackground } from "@/components/brand/BlobBackground";
 import { ActivityTicker } from "@/components/brand/ActivityTicker";
+import { StatusPill } from "@/components/brand/StatusPill";
 import { ThreadCard, type ThreadSummary } from "@/components/forum/ThreadCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -40,6 +41,7 @@ export default function LandingPage() {
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
         <BlobBackground />
         <div className="relative z-10 w-full max-w-3xl mx-auto px-4 md:px-8 py-24 flex flex-col items-start">
+          <StatusPill className="mb-8" />
           <h1 className="font-serif font-medium not-italic text-6xl md:text-7xl lg:text-8xl tracking-tight leading-none text-oops-text">
             oh no, what did Claude do{" "}
             <span className="text-oops-primary">this time?</span>
