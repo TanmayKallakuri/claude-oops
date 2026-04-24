@@ -46,6 +46,12 @@ export function Nav() {
         <Link href={"/" as never} className="flex items-center">
           <WordMark size="md" />
         </Link>
+        <Link
+          href={"/feed" as never}
+          className="hidden md:block text-sm font-medium text-oops-muted hover:text-oops-text transition-colors"
+        >
+          Feed
+        </Link>
       </div>
       <div className="flex items-center gap-3">
         {!loaded ? null : me ? (
