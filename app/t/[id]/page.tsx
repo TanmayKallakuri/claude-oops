@@ -3,6 +3,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
+
+import { Card } from "@/components/ui/Card";
+import { Pill } from "@/components/ui/Pill";
+import { VoteButtons } from "@/components/ui/VoteButtons";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { Dropdown, DropdownItem } from "@/components/ui/Dropdown";
+import { CommentItem, type CommentNode } from "@/components/forum/CommentItem";
+import { Composer } from "@/components/forum/Composer";
+import { useToast } from "@/components/ui/Toast";
+
+/* ── types ──────────────────────────────────────────────────── */
 
 type Thread = {
   id: string;
@@ -17,71 +30,44 @@ type Thread = {
   updated_at: string;
 };
 
-type Comment = {
-  id: string;
-  thread_id: string;
-  parent_comment_id: string | null;
-  body: string;
-  deleted: boolean;
-  author: { username: string; display_name: string | null } | null;
-  score: number;
-  current_user_vote: -1 | 0 | 1;
-  created_at: string;
-  updated_at: string;
-};
+type Me = { id: string; username: string };
 
-function VoteButtons({
-  target,
-  score,
-  current,
-  onVote,
-}: {
-  target: { type: "thread" | "comment"; id: string };
-  score: number;
-  current: -1 | 0 | 1;
-  onVote: (newScore: number, newVote: -1 | 0 | 1) => void;
-}) {
-  async function cast(value: -1 | 0 | 1) {
-    const next = current === value ? 0 : value;
-    const res = await fetch("/api/votes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ target_type: target.type, target_id: target.id, value: next }),
-    });
-    if (res.ok) {
-      const body = (await res.json()) as { score: number; current_user_vote: -1 | 0 | 1 };
-      onVote(body.score, body.current_user_vote);
-    }
-  }
-  return (
-    <span className="inline-flex items-center gap-2 text-sm">
-      <button
-        onClick={() => cast(1)}
-        className={`px-2 ${current === 1 ? "bg-green-700 text-white" : "border"}`}
-      >
-        ▲
-      </button>
-      <span>{score}</span>
-      <button
-        onClick={() => cast(-1)}
-        className={`px-2 ${current === -1 ? "bg-red-700 text-white" : "border"}`}
-      >
-        ▼
-      </button>
-    </span>
-  );
+/* ── helpers ─────────────────────────────────────────────────── */
+
+function categoryTone(cat: string): "danger" | "accent" | "primary" | "neutral" {
+  if (cat === "bug") return "danger";
+  if (cat === "behavior") return "accent";
+  if (cat === "discussion") return "primary";
+  return "neutral";
 }
+
+function maybeConfetti(value: -1 | 0 | 1) {
+  if (value !== 1) return;
+  if (sessionStorage.getItem("oops_first_vote")) return;
+  confetti({
+    particleCount: 50,
+    spread: 70,
+    colors: ["#c2410c", "#fbbf24", "#fed7aa"],
+    origin: { y: 0.6 },
+  });
+  sessionStorage.setItem("oops_first_vote", "1");
+}
+
+/* ── page ────────────────────────────────────────────────────── */
 
 export default function ThreadPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const toast = useToast();
   const threadId = params.id;
+
   const [thread, setThread] = useState<Thread | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [me, setMe] = useState<{ id: string; username: string } | null>(null);
+  const [comments, setComments] = useState<CommentNode[]>([]);
+  const [me, setMe] = useState<Me | null>(null);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [composeBody, setComposeBody] = useState("");
-  const [err, setErr] = useState<string | null>(null);
+  const [loadErr, setLoadErr] = useState<string | null>(null);
+
+  /* ── data loading ──────────────────────────────────────────── */
 
   async function loadAll() {
     const [tRes, cRes, meRes] = await Promise.all([
@@ -90,15 +76,15 @@ export default function ThreadPage() {
       fetch(`/api/auth/me`),
     ]);
     if (!tRes.ok) {
-      setErr(`Thread not found (${tRes.status})`);
+      setLoadErr(`Thread not found (${tRes.status})`);
       return;
     }
     const tBody = (await tRes.json()) as { thread: Thread };
-    const cBody = (await cRes.json()) as { items: Comment[] };
+    const cBody = (await cRes.json()) as { items: CommentNode[] };
     setThread(tBody.thread);
     setComments(cBody.items);
     if (meRes.ok) {
-      const meBody = (await meRes.json()) as { profile: { id: string; username: string } };
+      const meBody = (await meRes.json()) as { profile: Me };
       setMe({ id: meBody.profile.id, username: meBody.profile.username });
     } else {
       setMe(null);
@@ -110,22 +96,23 @@ export default function ThreadPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threadId]);
 
-  async function submitComment() {
-    if (!composeBody.trim()) return;
+  /* ── mutations ─────────────────────────────────────────────── */
+
+  async function submitComment(body: string) {
     const res = await fetch(`/api/threads/${threadId}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        body: composeBody,
+        body,
         parent_comment_id: replyingTo ?? undefined,
       }),
     });
     if (!res.ok) {
-      const body = await res.json();
-      setErr(body.error?.message ?? "Comment failed");
+      const errBody = await res.json();
+      toast({ tone: "error", text: errBody.error?.message ?? "failed" });
       return;
     }
-    setComposeBody("");
+    toast({ tone: "success", text: "posted" });
     setReplyingTo(null);
     await loadAll();
   }
@@ -133,158 +120,230 @@ export default function ThreadPage() {
   async function deleteThread() {
     if (!confirm("Delete this thread?")) return;
     const res = await fetch(`/api/threads/${threadId}`, { method: "DELETE" });
-    if (res.ok) router.push("/" as never);
-    else setErr("Delete failed");
+    if (res.ok) {
+      toast({ tone: "success", text: "thread deleted" });
+      router.push("/" as never);
+    } else {
+      toast({ tone: "error", text: "failed" });
+    }
   }
 
   async function deleteComment(id: string) {
     if (!confirm("Delete this comment?")) return;
     const res = await fetch(`/api/comments/${id}`, { method: "DELETE" });
-    if (res.ok) await loadAll();
-    else setErr("Delete failed");
+    if (res.ok) {
+      toast({ tone: "success", text: "comment deleted" });
+      await loadAll();
+    } else {
+      toast({ tone: "error", text: "failed" });
+    }
   }
 
-  if (err) return <main className="p-8 text-red-600">{err}</main>;
-  if (!thread) return <main className="p-8">Loading…</main>;
+  /* ── error / loading states ────────────────────────────────── */
+
+  if (loadErr) {
+    return (
+      <main className="p-8 text-oops-danger text-sm">{loadErr}</main>
+    );
+  }
+
+  if (!thread) {
+    return (
+      <main className="min-h-[60vh] flex items-center justify-center px-4">
+        <Skeleton height={200} className="w-full max-w-3xl" />
+      </main>
+    );
+  }
+
+  /* ── comment tree ──────────────────────────────────────────── */
 
   const topLevel = comments.filter((c) => c.parent_comment_id === null);
-  const childrenOf = (parentId: string) => comments.filter((c) => c.parent_comment_id === parentId);
+  const childrenOf = (parentId: string) =>
+    comments.filter((c) => c.parent_comment_id === parentId);
+
+  const replyParent = replyingTo
+    ? comments.find((c) => c.id === replyingTo)
+    : null;
+
+  const isAuthor = me && thread.author.username === me.username;
+
+  /* ── render ────────────────────────────────────────────────── */
 
   return (
-    <main className="mx-auto max-w-3xl p-8">
-      <Link href="/" className="text-sm text-slate-600 hover:underline">← back to feed</Link>
+    <motion.main
+      className="max-w-3xl mx-auto px-4 md:px-8 py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      {/* back link */}
+      <Link
+        href="/"
+        className="text-sm text-oops-muted hover:text-oops-primary transition-colors"
+      >
+        ← back to feed
+      </Link>
 
-      <h1 className="mt-3 text-3xl font-bold">{thread.title}</h1>
-      <p className="mt-1 text-sm text-slate-600">
-        [{thread.category}] by @{thread.author.username}
-      </p>
-      <div className="mt-3 whitespace-pre-wrap">{thread.body}</div>
+      {/* thread head */}
+      <Card className="p-6 md:p-8 mt-4">
+        {/* row 1: pill + author */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <Pill tone={categoryTone(thread.category)}>{thread.category}</Pill>
+          <span className="text-sm text-oops-muted">@{thread.author.username}</span>
+        </div>
 
-      <div className="mt-3 flex items-center gap-3">
-        <VoteButtons
-          target={{ type: "thread", id: thread.id }}
-          score={thread.score}
-          current={thread.current_user_vote}
-          onVote={(s, v) => setThread({ ...thread, score: s, current_user_vote: v })}
-        />
-        {me && thread.author.username === me.username && (
-          <button onClick={deleteThread} className="text-sm text-red-600 hover:underline">
-            delete thread
-          </button>
-        )}
-      </div>
+        {/* row 2: title */}
+        <h1 className="font-serif italic text-4xl md:text-5xl text-oops-text mt-3 tracking-tight leading-tight">
+          {thread.title}
+        </h1>
 
-      <h2 className="mt-8 text-xl font-bold">
+        {/* row 3: body */}
+        <p className="text-base text-oops-text whitespace-pre-wrap mt-4 leading-relaxed">
+          {thread.body}
+        </p>
+
+        {/* row 4: votes + meta + author actions */}
+        <div className="flex items-center gap-4 mt-6 pt-4 border-t border-oops-border flex-wrap">
+          <VoteButtons
+            score={thread.score}
+            current={thread.current_user_vote}
+            onChange={async (next) => {
+              const res = await fetch("/api/votes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  target_type: "thread",
+                  target_id: thread.id,
+                  value: next,
+                }),
+              });
+              if (res.ok) {
+                const body = (await res.json()) as {
+                  score: number;
+                  current_user_vote: -1 | 0 | 1;
+                };
+                setThread({
+                  ...thread,
+                  score: body.score,
+                  current_user_vote: body.current_user_vote,
+                });
+                maybeConfetti(body.current_user_vote);
+              } else {
+                const errBody = await res.json();
+                toast({ tone: "error", text: errBody.error?.message ?? "failed" });
+              }
+            }}
+          />
+
+          <span className="text-sm text-oops-muted">
+            {thread.comment_count}{" "}
+            {thread.comment_count === 1 ? "comment" : "comments"}
+          </span>
+
+          {isAuthor && (
+            <div className="ml-auto">
+              <Dropdown
+                trigger={
+                  <span className="text-sm text-oops-muted hover:text-oops-primary transition-colors px-2 py-1 rounded-lg hover:bg-oops-primary-soft/30">
+                    •••
+                  </span>
+                }
+                align="right"
+              >
+                <DropdownItem onClick={() => {}}>Edit</DropdownItem>
+                <DropdownItem variant="danger" onClick={deleteThread}>
+                  Delete
+                </DropdownItem>
+              </Dropdown>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      {/* comments heading */}
+      <h2 className="font-serif italic text-2xl md:text-3xl text-oops-text mt-10 mb-4">
         Comments ({thread.comment_count})
       </h2>
 
-      <ul className="mt-3 space-y-4">
-        {topLevel.map((c) => (
-          <li key={c.id}>
-            <CommentItem
-              comment={c}
-              me={me}
-              onReply={(id) => {
-                setReplyingTo(id);
-                setComposeBody("");
-              }}
-              onVoted={(id, s, v) =>
-                setComments((prev) => prev.map((x) => (x.id === id ? { ...x, score: s, current_user_vote: v } : x)))
-              }
-              onDelete={deleteComment}
-            />
-            <ul className="ml-8 mt-3 space-y-3">
-              {childrenOf(c.id).map((child) => (
-                <li key={child.id}>
-                  <CommentItem
-                    comment={child}
-                    me={me}
-                    onReply={null}
-                    onVoted={(id, s, v) =>
-                      setComments((prev) =>
-                        prev.map((x) => (x.id === id ? { ...x, score: s, current_user_vote: v } : x)),
-                      )
-                    }
-                    onDelete={deleteComment}
-                  />
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      {/* comment tree */}
+      {topLevel.length === 0 ? (
+        <p className="text-sm text-oops-muted italic">
+          no comments yet. be the first →
+        </p>
+      ) : (
+        <ul className="space-y-1">
+          {topLevel.map((c) => (
+            <li key={c.id}>
+              <CommentItem
+                comment={c}
+                me={me}
+                onReply={(id) => {
+                  setReplyingTo(id);
+                }}
+                onVoted={(id, score, vote) =>
+                  setComments((prev) =>
+                    prev.map((x) =>
+                      x.id === id ? { ...x, score, current_user_vote: vote } : x,
+                    ),
+                  )
+                }
+                onDelete={deleteComment}
+              />
 
-      <div className="mt-8 border-t pt-6">
-        <h3 className="text-lg font-bold">
-          {replyingTo ? "Reply to comment" : "New comment"}
-        </h3>
-        <textarea
-          value={composeBody}
-          onChange={(e) => setComposeBody(e.target.value)}
-          placeholder={me ? "Write a comment…" : "Sign in to comment"}
-          disabled={!me}
-          rows={4}
-          className="mt-2 w-full border p-2"
-        />
-        <div className="mt-2 flex gap-2">
-          <button
-            onClick={submitComment}
-            disabled={!me || !composeBody.trim()}
-            className="bg-slate-900 px-3 py-1 text-white disabled:opacity-50"
-          >
-            Post
-          </button>
-          {replyingTo && (
-            <button onClick={() => setReplyingTo(null)} className="border px-3 py-1">
-              Cancel reply
+              {/* replies */}
+              {childrenOf(c.id).length > 0 && (
+                <ul className="ml-8 pl-4 border-l-2 border-oops-border space-y-1 mt-1">
+                  {childrenOf(c.id).map((child) => (
+                    <li key={child.id}>
+                      <CommentItem
+                        comment={child}
+                        me={me}
+                        onReply={null}
+                        onVoted={(id, score, vote) =>
+                          setComments((prev) =>
+                            prev.map((x) =>
+                              x.id === id
+                                ? { ...x, score, current_user_vote: vote }
+                                : x,
+                            ),
+                          )
+                        }
+                        onDelete={deleteComment}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* composer */}
+      <div className="mt-8 pt-6 border-t border-oops-border">
+        {replyingTo && replyParent && (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm text-oops-muted">
+              replying to @{replyParent.author?.username ?? "unknown"}
+            </span>
+            <button
+              onClick={() => setReplyingTo(null)}
+              className="text-xs text-oops-muted hover:text-oops-primary transition-colors underline"
+            >
+              cancel
             </button>
-          )}
-        </div>
-      </div>
-    </main>
-  );
-}
+          </div>
+        )}
 
-function CommentItem({
-  comment,
-  me,
-  onReply,
-  onVoted,
-  onDelete,
-}: {
-  comment: Comment;
-  me: { id: string; username: string } | null;
-  onReply: ((id: string) => void) | null;
-  onVoted: (id: string, score: number, vote: -1 | 0 | 1) => void;
-  onDelete: (id: string) => void;
-}) {
-  if (comment.deleted) {
-    return <p className="text-sm italic text-slate-500">[deleted]</p>;
-  }
-  return (
-    <div>
-      <p className="text-sm text-slate-600">
-        @{comment.author?.username}
-      </p>
-      <div className="mt-1 whitespace-pre-wrap">{comment.body}</div>
-      <div className="mt-2 flex items-center gap-3 text-sm">
-        <VoteButtons
-          target={{ type: "comment", id: comment.id }}
-          score={comment.score}
-          current={comment.current_user_vote}
-          onVote={(s, v) => onVoted(comment.id, s, v)}
+        <Composer
+          onSubmit={submitComment}
+          placeholder="write a comment…"
+          submitLabel={replyingTo ? "post reply" : "post comment"}
+          disabled={!me}
+          disabledHint="sign in to comment"
+          onCancel={replyingTo ? () => setReplyingTo(null) : undefined}
         />
-        {me && onReply && (
-          <button onClick={() => onReply(comment.id)} className="text-slate-600 hover:underline">
-            reply
-          </button>
-        )}
-        {me && comment.author && comment.author.username === me.username && (
-          <button onClick={() => onDelete(comment.id)} className="text-red-600 hover:underline">
-            delete
-          </button>
-        )}
       </div>
-    </div>
+    </motion.main>
   );
 }
