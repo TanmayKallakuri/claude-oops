@@ -50,7 +50,7 @@ export function LandingBlobs({ className }: { className?: string }) {
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 overflow-hidden -z-10",
+        "pointer-events-none absolute inset-0 overflow-hidden",
         className,
       )}
     >

@@ -37,10 +37,10 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative bg-oops-bg">
+    <div className="relative">
       <LandingBlobs />
       {/* ── Section 1: Hero ── */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative z-10 min-h-[90vh] flex flex-col items-center justify-center">
         <div className="relative z-10 w-full max-w-3xl mx-auto px-4 md:px-8 py-24 flex flex-col items-start">
           <StatusPill className="mb-8" />
           <h1 className="font-serif font-medium not-italic text-6xl md:text-7xl lg:text-8xl tracking-tight leading-none text-oops-text">
@@ -68,7 +68,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Section 2: What this is ── */}
-      <section className="py-24">
+      <section className="relative z-10 py-24">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
             a community log
@@ -88,7 +88,7 @@ export default function LandingPage() {
       <StatusSection />
 
       {/* ── Section 3: Three kinds of oops ── */}
-      <section className="py-24 bg-oops-surface">
+      <section className="relative z-10 py-24 bg-oops-surface/55 backdrop-blur-[1px]">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
             what gets posted
@@ -120,7 +120,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Section 4: How it works ── */}
-      <section className="py-24">
+      <section className="relative z-10 py-24">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
             three steps
@@ -161,7 +161,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Section 4b: Reddit jab ── */}
-      <section className="py-24 bg-oops-surface">
+      <section className="relative z-10 py-24 bg-oops-surface/55 backdrop-blur-[1px]">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
             if you must
@@ -219,7 +219,7 @@ export default function LandingPage() {
 
       {/* ── Section 5: Live from the feed ── */}
       {previewThreads.length > 0 && (
-        <section className="py-24 bg-oops-surface">
+        <section className="relative z-10 py-24 bg-oops-surface/55 backdrop-blur-[1px]">
           <div className="max-w-3xl mx-auto px-4 md:px-8">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
               right now
@@ -245,7 +245,7 @@ export default function LandingPage() {
       )}
 
       {/* ── Section 6: Closing CTA ── */}
-      <section className="py-24 text-center">
+      <section className="relative z-10 py-24 text-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
           <h2 className="font-serif font-medium not-italic text-5xl tracking-tight text-oops-text">
             ready to add yours?
