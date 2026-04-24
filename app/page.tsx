@@ -160,6 +160,63 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Section 4b: Reddit jab ── */}
+      <section className="py-24 bg-oops-surface">
+        <div className="max-w-3xl mx-auto px-4 md:px-8">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-oops-muted">
+            if you must
+          </span>
+          <h2 className="font-serif font-medium not-italic text-4xl md:text-5xl tracking-tight text-oops-text mt-4">
+            still think reddit is{" "}
+            <span className="text-oops-primary italic">interesting?</span>
+          </h2>
+          <p className="text-base text-oops-muted max-w-xl mt-4">
+            we get it. the real community lives on reddit. go waste a few hours scrolling, then come back.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4 mt-10">
+            <a
+              href="https://www.reddit.com/r/claude/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Card className="p-6 hover:border-oops-ink/20 transition-colors">
+                <span className="text-xs font-semibold text-oops-muted tracking-wide uppercase">
+                  r/claude
+                </span>
+                <p className="font-serif text-2xl font-medium text-oops-text mt-2">
+                  the main hub. ↗
+                </p>
+                <p className="text-sm text-oops-muted mt-2">
+                  where everyone posts &ldquo;claude is so dumb today&rdquo; with zero reproduction steps. enjoy.
+                </p>
+              </Card>
+            </a>
+            <a
+              href="https://www.reddit.com/r/ClaudeCode/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Card className="p-6 hover:border-oops-ink/20 transition-colors">
+                <span className="text-xs font-semibold text-oops-muted tracking-wide uppercase">
+                  r/ClaudeCode
+                </span>
+                <p className="font-serif text-2xl font-medium text-oops-text mt-2">
+                  the dev crowd. ↗
+                </p>
+                <p className="text-sm text-oops-muted mt-2">
+                  slightly better signal-to-noise ratio. you&apos;ll still see &ldquo;is anthropic cooked?&rdquo; thrice a week.
+                </p>
+              </Card>
+            </a>
+          </div>
+          <p className="mt-6 text-xs text-oops-muted italic">
+            or just... stay here. we won&apos;t tell anyone.
+          </p>
+        </div>
+      </section>
+
       {/* ── Section 5: Live from the feed ── */}
       {previewThreads.length > 0 && (
         <section className="py-24 bg-oops-surface">
