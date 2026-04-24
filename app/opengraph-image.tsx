@@ -30,8 +30,8 @@ export default function OG() {
             width: 400,
             height: 400,
             borderRadius: "50%",
-            background: "radial-gradient(circle, #fed7aa, #fbbf24)",
-            opacity: 0.6,
+            background: "radial-gradient(circle, #e89268, #c96442)",
+            opacity: 0.35,
           }}
         />
         <div

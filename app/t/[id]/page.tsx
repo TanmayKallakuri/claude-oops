@@ -47,7 +47,7 @@ function maybeConfetti(value: -1 | 0 | 1) {
   confetti({
     particleCount: 50,
     spread: 70,
-    colors: ["#c2410c", "#fbbf24", "#fed7aa"],
+    colors: ["#c96442", "#e89268", "#c98a42"],
     origin: { y: 0.6 },
   });
   sessionStorage.setItem("oops_first_vote", "1");
